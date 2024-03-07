@@ -1,7 +1,7 @@
 import openai
 import os
 from tqdm import tqdm
-import sys
+import time
 
 
 def process_chunk(prompt, chunk, output_path, model):
@@ -15,7 +15,7 @@ def process_chunk(prompt, chunk, output_path, model):
         output_file.write(response + '\n\n')
 
 def split_file_to_chunks(prompt, input_path, output_path, chunk_size, model):
-    with open(input_path, 'r') as file:
+    with open(input_path, 'r', encoding="utf-8") as file:
         content = file.read()
         words = content.split()
 
@@ -38,6 +38,7 @@ def split_file_to_chunks(prompt, input_path, output_path, chunk_size, model):
             chunk = words[i:i+chunk_size]
             full_prompt = prompt + f'\n(Note: the following is an extract, words {i}-{i+chunk_size} of the {len(words)} word document.)\n\n'
             print(full_prompt)
+            time.sleep(12.)
             process_chunk(full_prompt, chunk, output_path, model)
 
     print(f'Finished writing to {output_path}.')
